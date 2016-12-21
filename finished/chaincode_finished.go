@@ -89,7 +89,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	key = args[0] //rename for funsies
 	value = args[1]
 	
-	value := `{"id": "` + args[0] + `", "value": "` + args[1]  + `"}`
+	value = `{"id": "` + args[0] + `", "value": "` + args[1]  + `"}`
 	err = stub.PutState(key, []byte(value))								//store myAsset with id as key
 
 	if err != nil {
