@@ -78,19 +78,20 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 // write - invoke function to write key/value pair
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var key, value string
+	//var type, name string
 	var err error
+	var value string
+	
 	fmt.Println("running write()")
 
-	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+	if len(args) != 6 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 6. name of the key and value to set")
 	}
-
-	key = args[0] //rename for funsies
-	value = args[1]
 	
-	value = `{"id": "` + args[0] + `", "value": "` + args[1]  + `"}`
-	err = stub.PutState(key, []byte(value))								//store myAsset with id as key
+
+value = `{"type": "` + args[1] + `","name":"` +args[0] + `","fpn": "` + args[2]  + `"," spn": "` + args[3] + `","fpnc": "` + args[4] +
+`","spnc": "` + args[5] + `","amount": "` + args[6] + `"}`
+	err = stub.PutState(args[0], []byte(value))								//store myAsset with id as key
 
 	if err != nil {
 		return nil, err
