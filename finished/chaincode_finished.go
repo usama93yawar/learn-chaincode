@@ -78,21 +78,17 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 // write - invoke function to write key/value pair
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	//var type, name string
+	var key, value string
 	var err error
-	var value string
-	
 	fmt.Println("running write()")
 
-	if len(args) != 7 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 6. name of the key and value to set")
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
-	
 
-value = `{"type": "` + args[1] + `","name":"` +args[0] + `","fpn": "` + args[2]  + `"," spn": "` + args[3] + `","fpnc": "` + args[4] +
-`","spnc": "` + args[5] + `","amount": "` + args[6] + `"}`
-	err = stub.PutState(args[0], []byte(value))								//store myAsset with id as key
-
+	key = args[0] //rename for funsies
+	value = args[1]
+	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
 	}
@@ -101,13 +97,14 @@ value = `{"type": "` + args[1] + `","name":"` +args[0] + `","fpn": "` + args[2] 
 
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var key, jsonResp , user string
+	var key, jsonResp, user string
 	var err error
 	user, err := t.get_username(stub)
 	if (user != "user_type1_0"){
 	valAsbytes = "Permission denied"
 		return valAsbytes, nil
 	}
+
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
 	}
@@ -121,9 +118,9 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	return valAsbytes, nil
 }
-func (t *SimpleChaincode) get_username(stub shim.ChaincodeStubInterface) (string, error) {
+func (t *SimpleChaincode) check_affiliation(stub shim.ChaincodeStubInterface) (string, error) {
+    affiliation, err := stub.ReadCertAttribute("role");
+	if err != nil { return "", errors.New("Couldn't get attribute 'role'. Error: " + err.Error()) }
+	return string(affiliation), nil
 
-    username, err := stub.ReadCertAttribute("username");
-	if err != nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
-	return string(username), nil
 }
