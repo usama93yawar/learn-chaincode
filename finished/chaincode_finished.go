@@ -101,9 +101,13 @@ value = `{"type": "` + args[1] + `","name":"` +args[0] + `","fpn": "` + args[2] 
 
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var key, jsonResp string
+	var key, jsonResp , user string
 	var err error
-
+	user, err := t.get_username(stub)
+	if (user != "user_type1_0"){
+	valAsbytes = "Permission denied"
+		return valAsbytes, nil
+	}
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
 	}
@@ -116,4 +120,10 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	return valAsbytes, nil
+}
+func (t *SimpleChaincode) get_username(stub shim.ChaincodeStubInterface) (string, error) {
+
+    username, err := stub.ReadCertAttribute("username");
+	if err != nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
+	return string(username), nil
 }
