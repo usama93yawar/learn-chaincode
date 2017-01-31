@@ -44,27 +44,10 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if err != nil {
 		return nil, err
 	}
-	//adminCert, err := stub.GetCallerMetadata()
-	//t.add_ecert(stub, "user_type1_0", adminCert)
+
 	return nil, nil
 }
 
-//==============================================================================================================================
-//	 add_ecert - Adds a new ecert and user pair to the table of ecerts
-//==============================================================================================================================
-
-func (t *SimpleChaincode) add_ecert(stub shim.ChaincodeStubInterface, name string, ecert []byte) ([]byte, error) {
-
-
-	err := stub.PutState(name, (ecert))
-
-	if err == nil {
-		return nil, errors.New("Error storing eCert for user " + name + " identity: ")
-	}
-
-	return nil, nil
-
-}
 // Invoke isur entry point to invoke a chaincode function
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
@@ -119,7 +102,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	user, err := t.get_username(stub)
 	 if (user != "user_type1_0"){
-		 jsonResp = "{\"Error\":\"Permission Denied " + user + "\"}"
+		 jsonResp = "{\"Error\":\"Permission Denied " + key + "\"}"
 			return nil, errors.New(jsonResp)
 		 }
 	if len(args) != 1 {
