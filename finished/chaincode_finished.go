@@ -120,4 +120,3 @@ func (t *SimpleChaincode) get_username(stub shim.ChaincodeStubInterface) (string
 	if err != nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
 	return string(username), nil
 }
-
