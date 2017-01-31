@@ -102,7 +102,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	user, err := t.get_username(stub)
 	 if (user != "user_type1_0"){
-		 jsonResp = "{\"Error\":\"Permission Denied " + key + "\"}"
+		 jsonResp = "{\"Error\":\"Permission Denied " + user + "\"}"
 			return nil, errors.New(jsonResp)
 		 }
 	if len(args) != 1 {
