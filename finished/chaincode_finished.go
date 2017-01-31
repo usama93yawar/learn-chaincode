@@ -99,11 +99,6 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var key, user, jsonResp string
 	var err error
-	user, err := t.get_username(stub)
-	if (user != "user_type1_0"){
-	valAsbytes = "Permission denied"
-		return valAsbytes, nil
-	}
 
 
 	if len(args) != 1 {
