@@ -44,8 +44,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if err != nil {
 		return nil, err
 	}
-	adminCert, err := stub.GetCallerMetadata()
-	t.add_ecert(stub, "user_type1_0", adminCert)
+	//adminCert, err := stub.GetCallerMetadata()
+	//t.add_ecert(stub, "user_type1_0", adminCert)
 	return nil, nil
 }
 
