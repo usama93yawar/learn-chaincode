@@ -65,7 +65,7 @@ func (t *SimpleChaincode) add_ecert(stub shim.ChaincodeStubInterface, name strin
 	return nil, nil
 
 }
-// Invoke isur entry point to invoke a chaincode function
+// Invoke is our entry point to invoke a chaincode function
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
@@ -138,8 +138,8 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 func (t *SimpleChaincode) get_username(stub shim.ChaincodeStubInterface) (string, error) {
 
     username, err := stub.ReadCertAttribute("username");
-	if username = nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
-	return string(err.Error()), nil
+	if err != nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
+	return string(username), nil
 }
 
 //==============================================================================================================================
