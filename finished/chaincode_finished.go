@@ -117,9 +117,9 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	var key, jsonResp string
 	var err error
 
-	caller, caller_affiliation, err := t.get_caller_data(stub)
+	caller, err := t.get_caller_data(stub)
 
-	if err != nil { return nil, errors.New("Error retrieving caller information"+ caller +caller_affiliation+ "Error"+ err.Error())}
+	if err != nil { return nil, errors.New("Error retrieving caller information"+ caller + "Error"+ err.Error())}
 
 	
 	if len(args) != 1 {
@@ -159,7 +159,7 @@ func (t *SimpleChaincode) check_affiliation(stub shim.ChaincodeStubInterface) (s
 //					 name passed.
 //==============================================================================================================================
 
-func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (string, string, error){
+func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (string, error){
 
 	user, err := t.get_username(stub)
 
@@ -169,9 +169,9 @@ func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (str
 
     // if err != nil { return "", "", err }
 
-	affiliation, err := t.check_affiliation(stub);
+	//affiliation, err := t.check_affiliation(stub);
 
-    if err != nil { return "", "", err }
+    if err != nil { return "", err }
 
-	return user, affiliation, nil
+	return user, nil
 }
