@@ -44,10 +44,27 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if err != nil {
 		return nil, err
 	}
-
+	//adminCert, err := stub.GetCallerMetadata()
+	//t.add_ecert(stub, "user_type1_0", adminCert)
 	return nil, nil
 }
 
+//==============================================================================================================================
+//	 add_ecert - Adds a new ecert and user pair to the table of ecerts
+//==============================================================================================================================
+
+func (t *SimpleChaincode) add_ecert(stub shim.ChaincodeStubInterface, name string, ecert []byte) ([]byte, error) {
+
+
+	err := stub.PutState(name, (ecert))
+
+	if err == nil {
+		return nil, errors.New("Error storing eCert for user " + name + " identity: ")
+	}
+
+	return nil, nil
+
+}
 // Invoke isur entry point to invoke a chaincode function
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
@@ -100,11 +117,11 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	var key, jsonResp string
 	var err error
 
-	user, err := t.get_username(stub)
-	 if (user != "user_type1_0"){
-		 jsonResp = "{\"Error\":\"Permission Denied " + key + "\"}"
-			return nil, errors.New(jsonResp)
-		 }
+	caller, caller_affiliation, err := t.get_caller_data(stub)
+
+	if err != nil { return nil, errors.New("Error retrieving caller information"+ caller +caller_affiliation+ "Error"+ err.Error())}
+
+	
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
 	}
@@ -123,4 +140,38 @@ func (t *SimpleChaincode) get_username(stub shim.ChaincodeStubInterface) (string
     username, err := stub.ReadCertAttribute("username");
 	if err != nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
 	return string(username), nil
+}
+
+//==============================================================================================================================
+//	 check_affiliation - Takes an ecert as a string, decodes it to remove html encoding then parses it and checks the
+// 				  		certificates common name. The affiliation is stored as part of the common name.
+//==============================================================================================================================
+
+func (t *SimpleChaincode) check_affiliation(stub shim.ChaincodeStubInterface) (string, error) {
+    affiliation, err := stub.ReadCertAttribute("role");
+	if err != nil { return "", errors.New("Couldn't get attribute 'role'. Error: " + err.Error()) }
+	return string(affiliation), nil
+
+}
+
+//==============================================================================================================================
+//	 get_caller_data - Calls the get_ecert and check_role functions and returns the ecert and role for the
+//					 name passed.
+//==============================================================================================================================
+
+func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (string, string, error){
+
+	user, err := t.get_username(stub)
+
+    // if err != nil { return "", "", err }
+
+	// ecert, err := t.get_ecert(stub, user);
+
+    // if err != nil { return "", "", err }
+
+	affiliation, err := t.check_affiliation(stub);
+
+    if err != nil { return "", "", err }
+
+	return user, affiliation, nil
 }
