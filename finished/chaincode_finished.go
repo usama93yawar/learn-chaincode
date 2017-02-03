@@ -138,8 +138,8 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 func (t *SimpleChaincode) get_username(stub shim.ChaincodeStubInterface) (string, error) {
 
     username, err := stub.ReadCertAttribute("username");
-	if err != nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
-	return string(username), nil
+	if username = nil { return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error()) }
+	return string(err.Error()), nil
 }
 
 //==============================================================================================================================
